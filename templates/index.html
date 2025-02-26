@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Steganography App</title>
+</head>
+<body>
+  <h1>Steganography App</h1>
+  <form method="POST" enctype="multipart/form-data">
+    <label>Select Action:</label>
+    <select name="action" id="actionSelect" onchange="toggleFields()">
+      <option value="embed">Embed</option>
+      <option value="extract">Extract</option>
+    </select><br><br>
+    <label>Upload Image:</label>
+    <input type="file" name="image" required><br><br>
+    <div id="embedFields">
+      <label>Key:</label>
+      <input type="text" name="key" required><br><br>
+      <label>Message:</label>
+      <input type="text" name="message" required><br><br>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  
+  <script>
+    function toggleFields() {
+      var action = document.getElementById("actionSelect").value;
+      var embedFields = document.getElementById("embedFields");
+      if(action === "embed") {
+        embedFields.style.display = "block";
+      } else {
+        embedFields.style.display = "none";
+      }
+    }
+    window.onload = toggleFields;
+  </script>
+  
+  {% if orig_url %}
+    <h2>Original Image</h2>
+    <img src="{{ orig_url }}" alt="Original Image" width="300"><br>
+  {% endif %}
+  
+  {% if stego_url %}
+    <h2>Stego Image</h2>
+    <img src="{{ stego_url }}" alt="Stego Image" width="300"><br>
+    <a href="{{ url_for('download_file', folder='stego', filename=stego_url.split('/')[-1]) }}">Download Stego Image</a>
+  {% endif %}
+  
+  {% if vis_url %}
+    <h2>Block Visualization</h2>
+    <img src="{{ vis_url }}" alt="Visualization" width="300"><br>
+    <a href="{{ url_for('download_file', folder='vis', filename=vis_url.split('/')[-1]) }}">Download Visualization</a>
+  {% endif %}
+  
+  {% if extracted_key %}
+    <h2>Extracted Key</h2>
+    <p>{{ extracted_key }}</p>
+  {% endif %}
+  
+  {% if extracted_message %}
+    <h2>Extracted Message</h2>
+    <p>{{ extracted_message }}</p>
+  {% endif %}
+</body>
+</html>
